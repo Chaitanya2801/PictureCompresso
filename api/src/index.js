@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import uploadRouter from './routes/upload.js';
 
 dotenv.config();
 
@@ -11,6 +12,9 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Use the upload route
+app.use('/api/upload', uploadRouter);
 
 // Basic route
 app.get('/', (req, res) => {
