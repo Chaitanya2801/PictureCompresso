@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import uploadRouter from './routes/upload.js';
 import statusRouter from './routes/status.js';
 import webhookRouter from './routes/webhook.js';
+import Logger from './utils/logger.js';
 
 dotenv.config();
 
@@ -31,5 +32,5 @@ app.get('/', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    Logger.info(`Server is running on http://localhost:${PORT}`);
 });

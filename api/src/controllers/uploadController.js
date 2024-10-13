@@ -3,6 +3,7 @@ import RequestModel from '../models/requestModel.js';
 import { processImages } from '../utils/imageProcessor.js'; // For processing images
 import parseCSV from '../utils/csvParser.js'; // CSV parsing utility
 import fetch from 'node-fetch';
+import Logger from '../utils/logger.js';
 
 export const uploadCSV = async (req, res) => {
     const request_id = uuidv4(); // Generate unique request ID
@@ -12,7 +13,7 @@ export const uploadCSV = async (req, res) => {
         const filePath = req.file.path; // Read CSV file path
         const records = await parseCSV(filePath); // Parse the CSV
 
-        console.log(`Parsed ${records.length} records from CSV`);
+        Logger.info(`Parsed ${records.length} records from CSV`);
 
         // Iterate over records and process each product entry
         for (const record of records) {
@@ -30,7 +31,7 @@ export const uploadCSV = async (req, res) => {
                     status: 'processing' // Set status to 'processing'
                 });
 
-                console.log(`Created request for serial number: ${serialNumber}`);
+                Logger.info(`Created request for serial number: ${serialNumber}`);
 
                 // Process the images (compress them)
                 const outputImageUrls = await processImages(inputImageUrls);
@@ -49,7 +50,7 @@ export const uploadCSV = async (req, res) => {
                 });
 
             } catch (err) {
-                console.error(`Error processing record for serial number: ${serialNumber}`, err);
+                Logger.error(`Error processing record for serial number: ${serialNumber}`, err);
 
                 // Update request status to 'failed' in case of an error
                 await RequestModel.updateRequest(request_id, {
@@ -83,10 +84,10 @@ export const uploadCSV = async (req, res) => {
                 body: JSON.stringify(webhookPayload),
             });
 
-            console.log('Webhook sent successfully');
+            Logger.info('Webhook sent successfully');
 
         } catch (webhookError) {
-            console.error('Error sending webhook:', webhookError);
+            Logger.error('Error sending webhook:', webhookError);
         }
 
         // Respond to the client with the request ID
@@ -94,7 +95,7 @@ export const uploadCSV = async (req, res) => {
 
     } catch (error) {
         // Global error handling
-        console.error('Error uploading and processing CSV:', error);
+        Logger.error('Error uploading and processing CSV:', error);
         
         // In case of an error in processing the whole CSV, we update the request status as 'failed'
         await RequestModel.updateRequest(request_id, { status: 'failed' });

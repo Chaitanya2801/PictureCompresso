@@ -1,4 +1,5 @@
 import RequestModel from '../models/requestModel.js';
+import Logger from '../utils/logger.js';
 
 export const getStatus = async (req, res) => {
     const { requestId } = req.params;
@@ -19,7 +20,7 @@ export const getStatus = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Error fetching request status:', error);
+        Logger.error('Error fetching request status:', error);
         return res.status(500).json({ message: 'Server error while fetching request status' });
     }
 };
