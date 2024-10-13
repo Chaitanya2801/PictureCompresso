@@ -2,10 +2,13 @@ import { v4 as uuidv4 } from 'uuid';
 import RequestModel from '../models/requestModel.js';
 import { processImages } from '../utils/imageProcessor.js'; // For processing images
 import parseCSV from '../utils/csvParser.js'; // CSV parsing utility
+import fetch from 'node-fetch';
 
 export const uploadCSV = async (req, res) => {
+    const request_id = uuidv4(); // Generate unique request ID
+    const outputResults = []; // To store processing results for each record
+
     try {
-        const request_id = uuidv4(); // Generate unique request ID
         const filePath = req.file.path; // Read CSV file path
         const records = await parseCSV(filePath); // Parse the CSV
 
@@ -38,16 +41,64 @@ export const uploadCSV = async (req, res) => {
                     status: 'completed' // Update status to 'completed'
                 });
 
+                outputResults.push({
+                    serialNumber,
+                    productName,
+                    status: 'completed',
+                    outputImageUrls
+                });
+
             } catch (err) {
                 console.error(`Error processing record for serial number: ${serialNumber}`, err);
+
+                // Update request status to 'failed' in case of an error
+                await RequestModel.updateRequest(request_id, {
+                    status: 'failed'
+                });
+
+                outputResults.push({
+                    serialNumber,
+                    productName,
+                    status: 'failed',
+                    error: err.message
+                });
             }
+        }
+
+        // After processing all images, send the webhook
+        const webhookUrl = 'https://a395-122-161-49-30.ngrok-free.app/api/webhook';
+
+        try {
+            const webhookPayload = {
+                request_id,
+                status: 'completed',  // Overall status
+                processed_records: outputResults // Send the results of the processing
+            };
+
+            await fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(webhookPayload),
+            });
+
+            console.log('Webhook sent successfully');
+
+        } catch (webhookError) {
+            console.error('Error sending webhook:', webhookError);
         }
 
         // Respond to the client with the request ID
         res.status(201).json({ message: 'CSV uploaded and processed successfully', request_id });
 
     } catch (error) {
+        // Global error handling
         console.error('Error uploading and processing CSV:', error);
+        
+        // In case of an error in processing the whole CSV, we update the request status as 'failed'
+        await RequestModel.updateRequest(request_id, { status: 'failed' });
+
         res.status(500).json({ message: 'Error uploading and processing CSV', error: error.message });
     }
 };

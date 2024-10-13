@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import uploadRouter from './routes/upload.js';
 import statusRouter from './routes/status.js';
+import webhookRouter from './routes/webhook.js';
 
 dotenv.config();
 
@@ -19,6 +20,9 @@ app.use('/api/upload', uploadRouter);
 
 // Use the status route
 app.use('/api/status', statusRouter);
+
+// Use the webhook route
+app.use('/api/webhook', webhookRouter);
 
 // Basic route
 app.get('/', (req, res) => {
