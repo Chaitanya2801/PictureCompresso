@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import uploadRouter from './routes/upload.js';
+import statusRouter from './routes/status.js';
 
 dotenv.config();
 
@@ -15,6 +16,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Use the upload route
 app.use('/api/upload', uploadRouter);
+
+// Use the status route
+app.use('/api/status', statusRouter);
 
 // Basic route
 app.get('/', (req, res) => {
