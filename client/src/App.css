@@ -1,0 +1,83 @@
+.App {
+    text-align: center;
+    background-color: #fff8dc; /* Creamy yellow background */
+    min-height: 100vh; /* Ensure it covers full viewport height */
+  }
+  
+  .App-header {
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #fdf5e6; /* Lighter cream for the header */
+    border-bottom: 2px solid #ebd9b3; /* Soft border to separate header */
+  }
+  
+  .main-container {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    height: calc(100vh - 100px); /* Deduct header height */
+  }
+  
+  .form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 3;
+  }
+  
+  .status-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 250px; /* Fixed width for the status panel */
+    padding: 10px;
+    background-color: #faf0e6; /* Soft cream background for status */
+    border: 1px solid #ebd9b3; /* Soft border for status box */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .status-container h2 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+  }
+  
+  .status-container input {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .status-container button {
+    width: 100%;
+    padding: 8px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .status-container button:hover {
+    background-color: #0056b3;
+  }
+  
+  .status-container p {
+    margin-top: 10px;
+  }
+  
+  /* Styling for PictureCompresso logo/title */
+h1 {
+    font-family: 'Poppins', sans-serif; /* Choose a modern, clean font */
+    font-size: 3rem; /* Make the text large */
+    background: linear-gradient(45deg, #ff9800, #ff5722); /* Gradient color from orange to deep orange */
+    -webkit-background-clip: text;
+    color: transparent; /* Text will take the gradient as color */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+    letter-spacing: 3px; /* Space letters for a modern feel */
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+  

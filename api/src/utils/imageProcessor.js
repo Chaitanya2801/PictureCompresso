@@ -2,7 +2,7 @@ import sharp from 'sharp'; // For image processing
 import axios from 'axios'; // To download images
 import fs from 'fs';
 import path from 'path';
-//import RequestModel from '../models/requestModel.js'; // Import the Request model for updates
+// import RequestModel from '../models/requestModel.js'; // Import the Request model for updates
 
 export const processImages = async (inputImageUrls) => {
     const outputImageUrls = [];
@@ -22,12 +22,16 @@ export const processImages = async (inputImageUrls) => {
                 .jpeg({ quality: 50 }) // Compress image
                 .toBuffer();
 
-            const outputFileName = `compressed-${path.basename(url)}`;
+            const outputFileName = `compressed-${path.basename(url)}`; // Use the basename of the input URL
             const outputPath = path.join('uploads', outputFileName);
             await sharp(outputBuffer).toFile(outputPath);
-            outputImageUrls.push(outputPath); // Store the path of the compressed image
+
+            // Generate the public URL for the image
+            const outputImageUrl = `http://localhost:3000/uploads/${outputFileName}`;
+            outputImageUrls.push(outputImageUrl); // Store the public URL of the compressed image
         }
 
+        console.log("Output image urls: " + JSON.stringify(outputImageUrls));
         return outputImageUrls; // Return the processed output image URLs
 
     } catch (error) {

@@ -5,6 +5,8 @@ import uploadRouter from './routes/upload.js';
 import statusRouter from './routes/status.js';
 import webhookRouter from './routes/webhook.js';
 import Logger from './utils/logger.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 
@@ -15,6 +17,15 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Log the path to the uploads folder
+console.log('Uploads path:', path.join(__dirname, '..', 'uploads')); // Add this line
+
+// Serve the uploads folder
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 // Use the upload route
 app.use('/api/upload', uploadRouter);

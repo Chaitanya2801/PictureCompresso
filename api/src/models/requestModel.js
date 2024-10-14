@@ -20,18 +20,27 @@ const createRequest = async (requestData) => {
     }
 };
 
-// Function to update output image URLs and status
 const updateRequest = async (request_id, updateData) => {
-    const { output_image_urls, status } = updateData;
+    const { input_image_urls, output_image_urls } = updateData;
 
+    // Ensure the input_image_urls is in a valid JSON string format
+    const inputUrlsString = JSON.stringify(input_image_urls);
+    const outputUrlsString = JSON.stringify(output_image_urls);
+
+    // Modify the query to update based on both request_id and input_image_urls
     const query = `
         UPDATE requests
-        SET output_image_urls = $1, status = $2
-        WHERE request_id = $3
+        SET output_image_urls = $1, status = 'completed'
+        WHERE request_id = $2 AND input_image_urls = $3
         RETURNING *;
     `;
 
-    const values = [output_image_urls, status, request_id];
+    // Prepare values for the query
+    const values = [
+        outputUrlsString, // Update output image URLs
+        request_id,       // Condition based on request_id
+        inputUrlsString   // Condition based on input_image_urls
+    ];
 
     try {
         const res = await pool.query(query, values);
@@ -41,16 +50,34 @@ const updateRequest = async (request_id, updateData) => {
     }
 };
 
-// Function to get request by request_id
+// Function to get all output_image_urls by request_id where status is completed
 const getRequestById = async (request_id) => {
     const query = `
-        SELECT * FROM requests
-        WHERE request_id = $1;
+        SELECT 
+            request_id, 
+            status, 
+            ARRAY_AGG(output_image_urls) AS processed_images
+        FROM requests
+        WHERE request_id = $1 AND status = 'completed'
+        GROUP BY request_id, status;
     `;
 
     try {
         const res = await pool.query(query, [request_id]);
-        return res.rows[0]; // Return the found record
+        
+        if (res.rows.length > 0) {
+            // Parse processed_images from string representation to actual array
+            const processedImages = res.rows[0].processed_images.map(imageString => {
+                return JSON.parse(imageString); // This converts the string to an array
+            }).flat(); // Flatten the array in case of multiple entries
+            
+            return {
+                ...res.rows[0],
+                processed_images: processedImages // Update the property with parsed images
+            };
+        } else {
+            return null; // Handle case where no rows are found
+        }
     } catch (err) {
         throw new Error('Error fetching request: ' + err.message);
     }

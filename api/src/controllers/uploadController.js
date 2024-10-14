@@ -36,10 +36,12 @@ export const uploadCSV = async (req, res) => {
                 // Process the images (compress them)
                 const outputImageUrls = await processImages(inputImageUrls);
 
+                console.log("Output image urls: " + JSON.stringify(outputImageUrls));
+
                 // Update the request with output image URLs
                 await RequestModel.updateRequest(newRequest.request_id, {
+                    input_image_urls: JSON.stringify(inputImageUrls),
                     output_image_urls: JSON.stringify(outputImageUrls), // Update output image URLs
-                    status: 'completed' // Update status to 'completed'
                 });
 
                 outputResults.push({
@@ -96,7 +98,7 @@ export const uploadCSV = async (req, res) => {
     } catch (error) {
         // Global error handling
         Logger.error('Error uploading and processing CSV:', error);
-        
+
         // In case of an error in processing the whole CSV, we update the request status as 'failed'
         await RequestModel.updateRequest(request_id, { status: 'failed' });
 
