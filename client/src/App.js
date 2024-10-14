@@ -1,5 +1,5 @@
-// src/App.js
 import React from 'react';
+import UploadForm from './components/uploadForm';
 
 function App() {
   return (
@@ -9,7 +9,7 @@ function App() {
         <p>Upload your CSV file to process images!</p>
       </header>
       <main>
-        {/* Upload component will go here */}
+        <UploadForm />
       </main>
     </div>
   );
