@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/PictureCompresso/static/css/main.417d0fab.css",
+    "main.js": "/PictureCompresso/static/js/main.70ce47a5.js",
+    "static/js/453.419a5d54.chunk.js": "/PictureCompresso/static/js/453.419a5d54.chunk.js",
+    "index.html": "/PictureCompresso/index.html",
+    "main.417d0fab.css.map": "/PictureCompresso/static/css/main.417d0fab.css.map",
+    "main.70ce47a5.js.map": "/PictureCompresso/static/js/main.70ce47a5.js.map",
+    "453.419a5d54.chunk.js.map": "/PictureCompresso/static/js/453.419a5d54.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.417d0fab.css",
+    "static/js/main.70ce47a5.js"
+  ]
+}
