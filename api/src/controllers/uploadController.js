@@ -8,6 +8,8 @@ import Logger from '../utils/logger.js';
 export const uploadCSV = async (req, res) => {
     const request_id = uuidv4(); // Generate unique request ID
     const outputResults = []; // To store processing results for each record
+    let successCount = 0; // Track successful records
+    let failureCount = 0; // Track failed records
 
     try {
         const filePath = req.file.path; // Read CSV file path
@@ -42,6 +44,8 @@ export const uploadCSV = async (req, res) => {
                     output_image_urls: outputImageUrls // Update output image URLs
                 });
 
+                successCount++; // Count successful records
+
                 outputResults.push({
                     serialNumber,
                     productName,
@@ -57,6 +61,8 @@ export const uploadCSV = async (req, res) => {
                     status: 'failed'
                 });
 
+                failureCount++; // Count failed records
+
                 outputResults.push({
                     serialNumber,
                     productName,
@@ -66,14 +72,23 @@ export const uploadCSV = async (req, res) => {
             }
         }
 
+        // Determine overall status based on success/failure counts
+        const overallStatus = failureCount === 0 ? 'completed' : 'failed';
+
+        // Update the overall request status in the database
+        await RequestModel.updateRequest(request_id, {
+            status: overallStatus
+        });
+
         // Send the webhook after processing all images
         const webhookUrl = 'https://7de9-122-161-49-30.ngrok-free.app/api/webhook';
 
         try {
+            Logger.info("OutputResults:" + JSON.stringify(outputResults));
             const webhookPayload = {
                 request_id,
-                status: 'completed',  // Overall status
-                processed_records: outputResults // Send the results of the processing
+                status: overallStatus,
+                processed_records: JSON.stringify(outputResults)
             };
 
             await fetch(webhookUrl, {

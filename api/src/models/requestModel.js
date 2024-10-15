@@ -42,11 +42,11 @@ const updateRequest = async (request_id, updateData) => {
         request_id,       // Condition based on request_id
         inputUrlsString   // Condition based on input_image_urls
     ];
-    Logger.info("Updating values:" + JSON.stringify(values));
+    Logger.info("Updating values:" + values);
 
     try {
         const res = await pool.query(query, values);
-        Logger.info("Values Updated" + res.rows[0]);
+        Logger.info("Values Updated" + JSON.stringify(res.rows[0]));
         return res.rows[0]; // Return the updated record
     } catch (err) {
         Logger.error("Error updating values:" + err.message);

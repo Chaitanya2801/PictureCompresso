@@ -7,6 +7,8 @@ import webhookRouter from './routes/webhook.js';
 import Logger from './utils/logger.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { Server } from 'socket.io';
+import http from 'http';
 
 dotenv.config();
 
@@ -14,15 +16,40 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3001',
+    methods: ['GET', 'POST'],
+    credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Create an HTTP server and integrate Socket.io
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:3001", // Ensure this matches your frontend's origin
+        methods: ["GET", "POST"],
+        credentials: true,
+    }
+});
+
+io.on('connection', (socket) => {
+    Logger.info('A user connected');
+    // Handle any events from the client here
+});
+
+// Make the `io` instance available to routes
+app.use((req, res, next) => {
+  req.io = io; // Attach `io` to `req` object
+  next();
+});
+
 // Log the path to the uploads folder
-console.log('Uploads path:', path.join(__dirname, '..', 'uploads')); // Add this line
+Logger.info('Uploads path:', path.join(__dirname, '..', 'uploads'));
 
 // Serve the uploads folder
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
@@ -42,6 +69,6 @@ app.get('/', (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     Logger.info(`Server is running on http://localhost:${PORT}`);
 });

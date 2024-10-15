@@ -1,74 +1,98 @@
+/* Set background on body to ensure full page color */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%; /* Ensure the body takes up full height */
+    background-color: #fff8dc; /* Same creamy yellow background */
+}
+
+/* Global styling */
 .App {
     text-align: center;
-    background-color: #fff8dc; /* Creamy yellow background */
     min-height: 100vh; /* Ensure it covers full viewport height */
-  }
-  
-  .App-header {
+    display: flex;
+    flex-direction: column;
+    background-color: transparent; /* Already inherited from body */
+}
+
+.App-header {
     margin-bottom: 20px;
     padding: 20px;
     background-color: #fdf5e6; /* Lighter cream for the header */
     border-bottom: 2px solid #ebd9b3; /* Soft border to separate header */
-  }
-  
-  .main-container {
+}
+
+/* Main container styling */
+.main-container {
+    flex-grow: 1;
+    padding: 20px; /* Add some padding around the container */
+    width: 100%;
+    max-width: 1200px; /* Set a max width to limit stretching */
+    margin: 0 auto; /* Center content horizontally */
+    display: flex;
+    flex-direction: column; /* Stack the form and status container vertically */
+}
+
+.form-status-container {
     display: flex;
     justify-content: center;
-    position: relative;
-    height: calc(100vh - 100px); /* Deduct header height */
-  }
-  
-  .form-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 3;
-  }
-  
-  .status-container {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 250px; /* Fixed width for the status panel */
-    padding: 10px;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap; /* Ensure the form and status wrap on smaller screens */
+}
+
+.form-container {
+    width: 400px; /* Fixed width for the form */
+}
+
+.status-container {
+    width: 300px; /* Fixed width for the status panel */
+    padding: 15px;
     background-color: #faf0e6; /* Soft cream background for status */
     border: 1px solid #ebd9b3; /* Soft border for status box */
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .status-container h2 {
-    font-size: 1.2em;
-    margin-bottom: 10px;
-  }
-  
-  .status-container input {
+}
+
+/* Styling for the download links */
+.download-links {
     width: 100%;
+    margin-top: 20px;
+}
+
+.download-links h2 {
+    font-size: 1.5em;
     margin-bottom: 10px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .status-container button {
-    width: 100%;
-    padding: 8px;
-    background-color: #007bff;
+}
+
+.download-links ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.download-links li {
+    margin-bottom: 10px;
+}
+
+/* Styling for the alert box */
+.alert {
+    position: fixed;
+    top: 20px; /* Make it appear below the viewport */
+    left: 50%;
+    transform: translateX(-50%);
+    transition: top 0.5s ease; /* Smooth transition */
+    padding: 15px;
+    background-color: #17a2b8;
     color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .status-container button:hover {
-    background-color: #0056b3;
-  }
-  
-  .status-container p {
-    margin-top: 10px;
-  }
-  
-  /* Styling for PictureCompresso logo/title */
+    z-index: 1000;
+    border-radius: 5px;
+}
+
+.alert-info {
+    background-color: #17a2b8; /* Blue color for info alert */
+}
+
+/* Styling for PictureCompresso logo/title */
 h1 {
     font-family: 'Poppins', sans-serif; /* Choose a modern, clean font */
     font-size: 3rem; /* Make the text large */
@@ -79,5 +103,4 @@ h1 {
     letter-spacing: 3px; /* Space letters for a modern feel */
     margin-bottom: 10px;
     padding: 10px;
-  }
-  
+}
