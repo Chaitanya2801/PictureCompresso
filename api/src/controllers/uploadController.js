@@ -30,18 +30,16 @@ export const uploadCSV = async (req, res) => {
                     output_image_urls: JSON.stringify([]), // Initialize with empty array
                     status: 'processing' // Set status to 'processing'
                 });
-
                 Logger.info(`Created request for serial number: ${serialNumber}`);
 
                 // Process the images (compress them)
                 const outputImageUrls = await processImages(inputImageUrls);
+                Logger.info("Output image urls: " + JSON.stringify(outputImageUrls));
 
-                console.log("Output image urls: " + JSON.stringify(outputImageUrls));
-
-                // Update the request with output image URLs
+                // Update the request with both input and output image URLs
                 await RequestModel.updateRequest(newRequest.request_id, {
-                    input_image_urls: JSON.stringify(inputImageUrls),
-                    output_image_urls: JSON.stringify(outputImageUrls), // Update output image URLs
+                    input_image_urls: inputImageUrls,
+                    output_image_urls: outputImageUrls // Update output image URLs
                 });
 
                 outputResults.push({
@@ -68,8 +66,8 @@ export const uploadCSV = async (req, res) => {
             }
         }
 
-        // After processing all images, send the webhook
-        const webhookUrl = 'https://a395-122-161-49-30.ngrok-free.app/api/webhook';
+        // Send the webhook after processing all images
+        const webhookUrl = 'https://7de9-122-161-49-30.ngrok-free.app/api/webhook';
 
         try {
             const webhookPayload = {

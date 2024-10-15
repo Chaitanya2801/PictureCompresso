@@ -1,4 +1,5 @@
 import pool from '../utils/db.js'; // Import the DB connection
+import Logger from '../utils/logger.js';
 
 // Function to create a new request entry
 const createRequest = async (requestData) => {
@@ -23,11 +24,11 @@ const createRequest = async (requestData) => {
 const updateRequest = async (request_id, updateData) => {
     const { input_image_urls, output_image_urls } = updateData;
 
-    // Ensure the input_image_urls is in a valid JSON string format
+    // Ensure the input and output URLs are properly formatted as JSON strings
     const inputUrlsString = JSON.stringify(input_image_urls);
     const outputUrlsString = JSON.stringify(output_image_urls);
 
-    // Modify the query to update based on both request_id and input_image_urls
+    // SQL query to update the output_image_urls and status based on request_id and input_image_urls
     const query = `
         UPDATE requests
         SET output_image_urls = $1, status = 'completed'
@@ -35,18 +36,20 @@ const updateRequest = async (request_id, updateData) => {
         RETURNING *;
     `;
 
-    // Prepare values for the query
+    // Prepare the values for the query
     const values = [
-        outputUrlsString, // Update output image URLs
+        outputUrlsString, // Update the output image URLs
         request_id,       // Condition based on request_id
         inputUrlsString   // Condition based on input_image_urls
     ];
+    Logger.info("Updating values:" + JSON.stringify(values));
 
     try {
         const res = await pool.query(query, values);
+        Logger.info("Values Updated" + res.rows[0]);
         return res.rows[0]; // Return the updated record
     } catch (err) {
-        throw new Error('Error updating request: ' + err.message);
+        Logger.error("Error updating values:" + err.message);
     }
 };
 
