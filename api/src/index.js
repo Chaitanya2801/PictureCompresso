@@ -31,7 +31,7 @@ const __dirname = path.dirname(__filename);
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3001", // Ensure this matches your frontend's origin
+        origin: "https://Chaitanya2801.github.io", // Ensure this matches your frontend's origin
         methods: ["GET", "POST"],
         credentials: true,
     }
@@ -70,5 +70,5 @@ app.get('/', (req, res) => {
 
 // Start server
 server.listen(PORT, () => {
-    Logger.info(`Server is running on http://localhost:${PORT}`);
+    Logger.info(`Server is running on http://${process.env.DB_URL}:${PORT}`);
 });
