@@ -1,5 +1,8 @@
 import pool from './src/utils/db.js';
 import Logger from './src/utils/logger.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const createTables = async () => {
     const createTableQuery = `
@@ -18,9 +21,9 @@ const createTables = async () => {
         await pool.query(createTableQuery);
         Logger.info('Table created successfully');
     } catch (err) {
-        Logger.error('Error creating table:', err.message);
+        Logger.error('Error creating table:', err.stack);
     } finally {
-        pool.end();
+        await pool.end();
     }
 };
 
