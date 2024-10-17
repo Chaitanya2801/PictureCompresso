@@ -8,7 +8,7 @@ function StatusCheck() {
 
     const handleCheckStatus = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/api/status/${requestId}`);
+            const response = await fetch(`http://ec2-3-109-153-29.ap-south-1.compute.amazonaws.com:3000/api/status/${requestId}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch status');
             }

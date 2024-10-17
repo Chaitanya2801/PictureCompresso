@@ -11,7 +11,7 @@ function App() {
   const [alertMessage, setAlertMessage] = useState('');
 
   useEffect(() => {
-    const socket = io('http://localhost:3000'); // Adjust the URL based on your backend
+    const socket = io('http://ec2-3-109-153-29.ap-south-1.compute.amazonaws.com:3000');
 
     socket.on('webhook_received', (data) => {
       console.log('Webhook Data Received:', JSON.stringify(data)); // Log the data

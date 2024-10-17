@@ -24,7 +24,7 @@ const UploadForm = () => {
 
     try {
       setStatus('Uploading...');
-      const response = await axios.post('http://localhost:3000/api/upload', formData, {
+      const response = await axios.post('http://ec2-3-109-153-29.ap-south-1.compute.amazonaws.com:3000/api/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
